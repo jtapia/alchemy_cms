@@ -5,15 +5,14 @@ Alchemy::Engine.routes.draw do
 
   get '/sitemap.xml' => 'pages#sitemap', format: 'xml'
 
-  get '/admin' => redirect('admin/dashboard')
-  get '/admin/dashboard' => 'admin/dashboard#index',
-        :as => :admin_dashboard
-  get '/admin/dashboard/info' => 'admin/dashboard#info',
-        :as => :dashboard_info
-  get '/admin/help' => 'admin/dashboard#help',
-        :as => :help
-  get '/admin/dashboard/update_check' => 'admin/dashboard#update_check',
-        :as => :update_check
+  scope Alchemy.admin_path, {constraints: Alchemy.admin_constraints} do
+    get '/' => redirect("#{Alchemy.admin_path}/dashboard"), as: :admin
+    get '/dashboard' => 'admin/dashboard#index', as: :admin_dashboard
+    get '/dashboard/info' => 'admin/dashboard#info', as: :dashboard_info
+    get '/help' => 'admin/dashboard#help', as: :help
+    get '/dashboard/update_check' => 'admin/dashboard#update_check', as: :update_check
+    get '/leave' => 'admin/base#leave', as: :leave_admin
+  end
 
   get '/attachment/:id/download(/:name)' => 'attachments#download',
         :as => :download_attachment
@@ -27,8 +26,6 @@ Alchemy::Engine.routes.draw do
         :as => :zoom_picture
   get "/pictures/:id/thumbnails(/:size)(/:crop)(/:crop_from/:crop_size)/:name.:format" => 'pictures#thumbnail',
         :as => :thumbnail, :defaults => {:format => 'png', :name => "thumbnail"}
-
-  get '/admin/leave' => 'admin/base#leave', :as => :leave_admin
 
   resources :messages, :only => [:index, :new, :create]
   resources :elements, :only => :show
@@ -50,7 +47,7 @@ Alchemy::Engine.routes.draw do
     get '/admin/pages/:id(.:format)' => 'pages#show', as: 'preview_page'
   end
 
-  namespace :admin do
+  namespace :admin, {path: Alchemy.admin_path, constraints: Alchemy.admin_constraints} do
     resources :contents do
       collection do
         post :order
