@@ -56,7 +56,8 @@ module Alchemy
     #
     def picture_url(options = {})
       return if picture.nil?
-      routes.show_picture_path(picture_params(options))
+      # routes.show_picture_path(picture_params(options))
+      Dragonfly.app(:alchemy_pictures).remote_url_for content.essence.picture.image_file.send(:uid)
     end
 
     # The name of the picture used as preview text in element editor views.
