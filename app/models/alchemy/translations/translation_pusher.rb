@@ -1,3 +1,4 @@
+require 'localeapp'
 module Alchemy
   module Translations
     class TranslationPusher
