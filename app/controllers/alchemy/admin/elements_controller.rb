@@ -115,6 +115,7 @@ module Alchemy
         return unless locale == 'en'
 
         element.essences.each do |essence|
+          next unless [Alchemy::EssenceText,Alchemy::EssenceRichtext,Alchemy::EssenceHtml].include? essence.class
           key = essence.content.name
           description = essence.body
 
