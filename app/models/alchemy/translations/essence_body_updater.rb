@@ -60,5 +60,5 @@ module Alchemy
                                 t[:essence_type].eq('Alchemy::EssenceRichtext')).or(
                                 t[:essence_type].eq('Alchemy::EssenceHtml')))
         end
-  =end
+=end
 end
