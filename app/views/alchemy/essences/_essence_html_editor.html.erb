@@ -4,6 +4,7 @@
   <%= text_area_tag(
     content.form_field_name,
     content.ingredient
-  ) %>
+      ) %>
+  <%= render 'alchemy/essences/shared/locale_links', content: content %>
 </div>
 <% end %>

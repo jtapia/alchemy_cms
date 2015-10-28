@@ -97,8 +97,24 @@ module Alchemy
       end
     end
 
+    initializer 'alchemy.load_workers' do |app|
+      Dir.glob(File.join(File.dirname(__FILE__), '../../app/workers/alchemy/*.rb')).each do |worker|
+        require worker
+      end
+    end
+
+
     config.after_initialize do
       require_relative './userstamp'
     end
+  end
+
+  def self.redis
+    @@redis ||= if ENV["REDISTOGO_URL"]
+                   uri = URI.parse(ENV["REDISTOGO_URL"])
+                   Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+                 else
+                   Redis.new
+                end
   end
 end

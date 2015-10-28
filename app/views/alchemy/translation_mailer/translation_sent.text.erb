@@ -1,0 +1,4 @@
+Translations were just sent:
+<% @translations.each do |translation| %>
+  <%= translation['locale'] %>:<%= translation['key'] %>:<%= translation['description'] %>
+<% end %>

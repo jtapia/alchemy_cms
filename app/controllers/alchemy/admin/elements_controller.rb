@@ -1,3 +1,4 @@
+require 'localeapp'
 module Alchemy
   module Admin
     class ElementsController < Alchemy::Admin::BaseController
@@ -52,6 +53,10 @@ module Alchemy
         end
         @cell_name = @cell.nil? ? "for_other_elements" : @cell.name
         if @element.valid?
+
+          Rails.logger.error "[ALCHEMY_LOCALE] updating contents for element in elements_controller#create: #{@element}"
+          update_translations(@element) if @element.page.language.language_code == 'en'
+
           render :create
         else
           @element.page = @page
@@ -70,6 +75,9 @@ module Alchemy
         if @element.update_contents(contents_params)
           @page = @element.page
           @element_validated = @element.update_attributes!(element_params)
+
+          Rails.logger.error "[ALCHEMY_LOCALE] updating contents for element in elements_controller#update: #{@element}"
+          update_translations(@element) if @element.page.language.language_code == 'en'
         else
           @element_validated = false
           @notice = _t('Validation failed')
@@ -105,6 +113,27 @@ module Alchemy
       end
 
       private
+      def update_translations(element)
+        locale = element.page.language.language_code
+
+        # do _not_ update foreign languages from alchemy
+        return unless locale == 'en'
+
+        element.essences.each do |essence|
+          next unless [Alchemy::EssenceText,Alchemy::EssenceRichtext,Alchemy::EssenceHtml].include? essence.class
+          key = "#{essence.content.name}_id#{essence.content.id}"
+          description = essence.body
+
+          Rails.logger.info "[ALCHEMY_LOCALE] locale/key/value added to localeapp queue: #{locale}/#{key}/#{description}"
+
+          Localeapp.missing_translations.add(locale, "#{Alchemy::Translations::TRANSLATION_PREFIX}.#{key}", description)
+        end
+
+        Rails.logger.info "[ALCHEMY_LOCALE] posting missing translations to locale"
+
+        Localeapp.sender.post_missing_translations
+        Alchemy::TranslationSentEmail.new.perform(Localeapp.missing_translations.to_send.to_json)
+      end
 
       def load_element
         @element = Element.find(params[:id])

@@ -90,6 +90,35 @@ module Alchemy
         )
       end
 
+      def render_locale_links_for_content(content)
+        links = []
+
+        if h = Alchemy::Translations::Cacher.new.all_translated_content
+          if h[content.name]
+            # now what locales do we have for this content?
+            h[content.name].keys.each do |locale|
+              next if (locale == content.essence.element.page.language.language_code rescue true) # skip 'this' locale
+
+              # find the essence id
+              content_id = h[content.name][locale]
+              begin
+                # grab the cell anchor if it exists
+                anchor = "#cell_#{content.essence.element.cell.name}" rescue ""
+                content_for_locale = Alchemy::Content.find(content_id)
+                links << link_to(locale, "#{alchemy.edit_admin_page_path(content_for_locale.essence.element.page)}#{anchor}")
+              rescue => e
+                Rails.logger.error "trouble finding essence for essence_id #{content_id} in render_locale_links_for_content"
+              end
+            end
+          end
+        end
+        if links.present?
+          links.unshift('Other translations:')
+        end
+        links.join
+
+      end
+
       # Renders a link for removing that content
       def delete_content_link(content)
         link_to_confirm_dialog(
