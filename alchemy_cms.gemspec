@@ -4,7 +4,7 @@ require 'alchemy/version'
 
 Gem::Specification.new do |gem|
   gem.name                  = 'alchemy_cms'
-  gem.version               = Alchemy::VERSION
+  gem.version               = '3.2.1'
   gem.platform              = Gem::Platform::RUBY
   gem.authors               = ['Thomas von Deyen', 'Robin Boening', 'Marc Schettke', 'Hendrik Mans', 'Carsten Fregin']
   gem.email                 = ['alchemy@magiclabs.de']
