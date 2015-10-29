@@ -3,7 +3,6 @@ module Alchemy
     class EssenceBodyUpdater
 
       def update_bodies(translations)
-        binding.pry
         Rails.logger.info "Updating essences with #{translations}"
 
         locales = translations.keys
