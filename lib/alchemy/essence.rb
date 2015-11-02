@@ -49,6 +49,7 @@ module Alchemy #:nodoc:
 
           after_update :touch_content
           after_save :refresh_translation_cache
+          after_destroy :refresh_translation_cache
 
           def acts_as_essence_class
             #{self.name}

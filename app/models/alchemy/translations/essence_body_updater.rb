@@ -20,16 +20,12 @@ module Alchemy
             # do we have an essence for this name/locale?
             next unless essence_id
 
-              # do we have a translation for this alchemy essence?
-              translation = translations[locale][TRANSLATION_PREFIX][essence_name] rescue nil
-              if translation
-                # Rails.logger.error "Updating essence: #{content.name}" if content.name == "megacrate_winner_prize_3"
-                essence = Alchemy::Essence.find(essence_id) rescue nil
-                essence.update_attributes(body: translation) if essence
-              end
-
-            rescue => e
-              Rails.logger.error "Error in Alchemy update_bodies for content: #{content.name}: #{e}" rescue nil
+            # do we have a translation for this alchemy essence?
+            translation = translations[locale][TRANSLATION_PREFIX][essence_name] rescue nil
+            if translation
+              # Rails.logger.error "Updating essence: #{content.name}" if content.name == "megacrate_winner_prize_3"
+              essence = Alchemy::Essence.find(essence_id) rescue nil
+              essence.update_attributes(body: translation) if essence
             end
           end
         end
