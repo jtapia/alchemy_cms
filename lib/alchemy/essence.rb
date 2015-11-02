@@ -48,6 +48,7 @@ module Alchemy #:nodoc:
           delegate :public?,     to: :element, allow_nil: true
 
           after_update :touch_content
+          after_save :refresh_translation_cache
 
           def acts_as_essence_class
             #{self.name}
@@ -225,6 +226,10 @@ module Alchemy #:nodoc:
         "alchemy/essences/#{partial_name}_view"
       end
 
+      def refresh_translation_cache
+        Rails.logger.error "purging translation cache"
+        Alchemy.redis.del('all_translated_content')
+      end
     end
 
   end

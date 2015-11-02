@@ -12,31 +12,20 @@ module Alchemy
             Rails.logger.error "Skipping locale: #{locale} b/c no changes"
             next
           end
-          all_translated_content.each do |content|
-            begin
-              next unless locale == content.essence.element.page.language.language_code
-              if content.name == "megacrate_winner_prize_3"
 
-    # Updating essences with {"de"=>{"do_not_translate"=>{"megacrate_winner_prize_3"=>"<p>waz it fake German10</p>"}}}
+          # :essence_name => { :locale => :id }
+          all_translated_content.each_key do |essence_name|
+            essence_id = all_translated_content[essence_name][locale]
 
-                # checking for key: {"do_not_translate"=>{"megacrate_winner_prize_3"=>"<p>waz it fake German9</p>"}, "specialty_crates"=>{"fallout-4-crate"=>{"checkouts"=>{"button_copy"=>nil, "disclaimer"=>nil, "vat"=>nil}, "collection"=>{"email_template"=>nil, "list"=>nil}}}}[do_not_translate.][megacrate_winner_prize_3]
-# and we have: {"do_not_translate"=>{"megacrate_winner_prize_3"=>"<p>waz it fake German9</p>"}, "specialty_crates"=>{"fallout-4-crate"=>{"checkouts"=>{"button_copy"=>nil, "disclaimer"=>nil, "vat"=>nil}, "collection"=>{"email_template"=>nil, "list"=>nil}}}} for the preamble
+            # do we have an essence for this name/locale?
+            next unless essence_id
 
-                begin
-                  translation = translations[locale][TRANSLATION_PREFIX][content.name] rescue nil
-                  Rails.logger.error "got translation: #{translation}"
-                rescue => e2
-                  Rails.logger.error "WTF??? #{e2}"
-                end
-              end
               # do we have a translation for this alchemy essence?
-              translation = translations[locale][TRANSLATION_PREFIX][content.name] rescue nil
+              translation = translations[locale][TRANSLATION_PREFIX][essence_name] rescue nil
               if translation
-                Rails.logger.error "Updating essence: #{content.name}"  if content.name == "megacrate_winner_prize_3"
-                content.essence.update_attributes(body: translation)
-              else
-                Rails.logger.error "Skipping essence: #{content.name} b/c no new translation" if content.name == "megacrate_winner_prize_3"
-                next
+                # Rails.logger.error "Updating essence: #{content.name}" if content.name == "megacrate_winner_prize_3"
+                essence = Alchemy::Essence.find(essence_id) rescue nil
+                essence.update_attributes(body: translation) if essence
               end
 
             rescue => e
@@ -48,35 +37,30 @@ module Alchemy
 
       private
       def all_translated_content
+        if data = Alchemy.redis.get('all_translated_content')
+          data
+        else
+          # :essence_name => { :locale => :essence_id }
+          # let's populate our in-memory store
           t = Alchemy::Content.arel_table
 
+          data = Hash.new
           Alchemy::Content.where(t[:essence_type].eq('Alchemy::EssenceText').or(
-                                t[:essence_type].eq('Alchemy::EssenceRichtext')).or(
-                                t[:essence_type].eq('Alchemy::EssenceHtml')))
-      end
-    end
-  end
+                                  t[:essence_type].eq('Alchemy::EssenceRichtext')).or(
+                                  t[:essence_type].eq('Alchemy::EssenceHtml'))).each do |content|
 
-      # revisit this for performance reasons
-=begin
-          all_translated_content_for_locale(locale).each do |content|
             begin
-              content.first.essence.element.page.language.language_code
+              data[content.name] ||= {}
+              data[content.name][content.essence.element.page.language.language_code] = content.essence.id
             rescue => e
-              Rails.logger.error "Error in Alchemy update_bodies for content: #{content}: #{e}"
+              Rails.logger.error "Alchemy Error - malformed content: #{content.name}"
             end
           end
 
-      def not_used_all_translated_content_for_locale(locale)
-        # for performance reasons, drill down to the locale-specific essences from the Page vs. Essence.where...
-        Alchemy::Page.where(language_code: locale).each do |
-          t = Alchemy::Content.arel_table
-
-          Alchemy::Content.first.essence.element.page.language.language_code
-
-          Alchemy::Content.where(t[:essence_type].eq('Alchemy::EssenceText').or(
-                                t[:essence_type].eq('Alchemy::EssenceRichtext')).or(
-                                t[:essence_type].eq('Alchemy::EssenceHtml')))
+          Alchemy.redis.put('all_translated_content', data)
+          data
         end
-=end
+      end
+    end
+  end
 end
