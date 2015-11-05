@@ -53,6 +53,10 @@ module Alchemy
         end
         @cell_name = @cell.nil? ? "for_other_elements" : @cell.name
         if @element.valid?
+
+          Rails.logger.error "[ALCHEMY_LOCALE] updating contents for element in elements_controller#create: #{@element}"
+          update_translations(@element) if @element.page.language.language_code == 'en'
+
           render :create
         else
           @element.page = @page
@@ -72,7 +76,7 @@ module Alchemy
           @page = @element.page
           @element_validated = @element.update_attributes!(element_params)
 
-          Rails.logger.info "[ALCHEMY_LOCALE] updating contents for element in elements_controller#update: #{@element}"
+          Rails.logger.error "[ALCHEMY_LOCALE] updating contents for element in elements_controller#update: #{@element}"
           update_translations(@element) if @element.page.language.language_code == 'en'
         else
           @element_validated = false
@@ -128,6 +132,7 @@ module Alchemy
         Rails.logger.info "[ALCHEMY_LOCALE] posting missing translations to locale"
 
         Localeapp.sender.post_missing_translations
+        Alchemy::TranslationSentEmail.new.perform(Localeapp.missing_translations.to_send.to_json)
       end
 
       def load_element

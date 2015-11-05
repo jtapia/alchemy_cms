@@ -97,6 +97,13 @@ module Alchemy
       end
     end
 
+    initializer 'alchemy.load_workers' do |app|
+      Dir.glob(File.join(File.dirname(__FILE__), '../../app/workers/alchemy/*.rb')).each do |worker|
+        require worker
+      end
+    end
+
+
     config.after_initialize do
       require_relative './userstamp'
     end

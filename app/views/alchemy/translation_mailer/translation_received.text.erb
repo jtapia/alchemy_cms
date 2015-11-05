@@ -1,0 +1,14 @@
+Translations were just received:
+
+<% t = @translations['translations'] %>
+<% locales = t.keys %>
+
+<% locales.each do |locale| %>
+  <% begin %>
+  Locale: <%= locale %>
+    <% t[locale][Alchemy::Translations::TRANSLATION_PREFIX].each_pair do |key,value| %>
+      <%= key %>: <%= value %>
+    <% end %>
+  <% rescue => e%>
+  <% end %>
+<% end %>
