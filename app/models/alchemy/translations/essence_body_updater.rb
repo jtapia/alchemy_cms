@@ -30,7 +30,7 @@ module Alchemy
             begin
               translation = translations[locale][Alchemy::Translations::TRANSLATION_PREFIX][essence_key]
             rescue => e
-              Rails.logger.error "Unable to locate translation: locale: #{locale} prefix: #{Alchemy::Translations::TRANSLATION_PREFIX} essence_key: #{essence_key}"
+              Rails.logger.error "Unable to locate translation: locale: #{locale} prefix: #{Alchemy::Translations::TRANSLATION_PREFIX} essence_key: #{essence_key}" if essence_key =~ /megacrate_winner_prize_3/
               nil
             end
             if translation

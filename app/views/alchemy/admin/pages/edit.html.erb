@@ -165,7 +165,31 @@
           onClick: function() {
             Alchemy.TrashWindow.open(<%= @page.id %>, '<%= _t("Trash") %>');
           }
-        }
+        },
+        {
+          title: '<%= _t("Get latest translations") %>',
+          label: '<%= _t("Get latest translations") %>',
+          iconClass: 'translations',
+          buttonId: 'element_latest_translation_button',
+          onClick: function() {
+            Alchemy.openDialog('<%= alchemy.admin_latest_translations_path %>', {
+              title :'<%= _t("Get Latest Translations") %>',
+              size: '380x305'
+            });
+          }
+        }/*,
+        {
+          title: '<%= _t("Get ALL translations") %>',
+          label: '<%= _t("Get ALL translations") %>',
+          iconClass: 'trash<%= trash_empty?("elements") ? "" : " full" %>',
+          buttonId: 'element_trash_button',
+          onClick: function() {
+            Alchemy.openDialog('<%= alchemy.admin_all_translations_path %>', {
+              title :'<%= _t("Get ALL Translations") %>',
+              size: '380x305'
+            });
+          }
+        }*/
       ]
     }, function() {
       Alchemy.ImageLoader('#element_area');

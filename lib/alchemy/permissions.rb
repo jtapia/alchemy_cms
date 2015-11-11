@@ -103,6 +103,9 @@ module Alchemy
         can [:info, :help],         :alchemy_admin_dashboard
         can :manage,                :alchemy_admin_clipboard
         can :index,                 :trash
+        can :index,                 :alchemy_admin_all_translations
+        can :index,                 :alchemy_admin_latest_translations
+
         can :edit,                  :alchemy_admin_layoutpages
 
         # Resources

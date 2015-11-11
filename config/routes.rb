@@ -135,6 +135,27 @@ Alchemy::Engine.routes.draw do
       end
     end
 
+    resource :latest_translations, :only => :index, :controller => 'latest_translations' do
+      collection do
+        get :index
+      end
+    end
+
+    resource :all_translations, :only => :index, :controller => 'all_translations' do
+      collection do
+        get :index
+      end
+    end
+
+    resource :clipboard, :only => :index, :controller => 'clipboard' do
+      collection do
+        get :index
+        delete :clear
+        delete :remove
+        post :insert
+      end
+    end
+
     resource :trash, :only => :index, :controller => 'trash' do
       collection do
         get :index
