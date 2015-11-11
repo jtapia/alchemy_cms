@@ -35,7 +35,12 @@ module Alchemy
             end
             if translation
               Rails.logger.error "Updating essence: #{essence_key} (locale: #{locale}) with #{translation}" if essence_key =~ /megacrate_winner_prize_3/
-              content = Alchemy::Content.find(content_id) rescue nil
+              begin
+                content = Alchemy::Content.find(content_id)
+              rescue => e2
+                Rails.logger.error "PROBLEM finding content for content_id #{content_id} : #{essence_key} (locale: #{locale})"
+                nil
+              end
               content.essence.update_column(:body, translation) if content && content.essence
             else
               Rails.logger.error "NOT Updating essence: #{essence_key} (locale: #{locale}) - #{translations[locale][Alchemy::Translations::TRANSLATION_PREFIX]} - #{Alchemy::Translations::TRANSLATION_PREFIX}" if essence_key =~ /megacrate_winner_prize_3/
