@@ -18,7 +18,7 @@ module Alchemy
                                   t[:essence_type].eq('Alchemy::EssenceHtml'))).each do |content|
 
             begin
-              key = "#{content.name}_cid#{content.id}"
+              key = "#{content.name}_cid_#{content.id}"
               data[key] ||= {}
               data[key][content.essence.element.page.language.language_code] = content.id
             rescue => e

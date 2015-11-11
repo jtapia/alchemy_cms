@@ -94,13 +94,15 @@ module Alchemy
         links = []
 
         if h = Alchemy::Translations::Cacher.new.all_translated_content
-          if h[content.name]
+          key = "#{content.name}_cid_#{content.id}"
+
+          if h[key]
             # now what locales do we have for this content?
-            h[content.name].keys.each do |locale|
+            h[key].keys.each do |locale|
               next if (locale == content.essence.element.page.language.language_code rescue true) # skip 'this' locale
 
               # find the essence id
-              content_id = h[content.name][locale]
+              content_id = h[key][locale]
               begin
                 # grab the cell anchor if it exists
                 anchor = "#cell_#{content.essence.element.cell.name}" rescue ""

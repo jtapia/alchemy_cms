@@ -121,7 +121,7 @@ module Alchemy
 
         element.essences.each do |essence|
           next unless [Alchemy::EssenceText,Alchemy::EssenceRichtext,Alchemy::EssenceHtml].include? essence.class
-          key = "#{essence.content.name}_id#{essence.content.id}"
+          key = "#{essence.content.name}_cid_#{essence.content.id}"
           description = essence.body
 
           Rails.logger.info "[ALCHEMY_LOCALE] locale/key/value added to localeapp queue: #{locale}/#{key}/#{description}"
