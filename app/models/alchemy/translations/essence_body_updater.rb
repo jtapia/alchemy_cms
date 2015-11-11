@@ -33,12 +33,15 @@ module Alchemy
             if translation
               Rails.logger.error "Updating essence: #{essence_key} (locale: #{locale}) with #{translation}" if essence_key =~ /megacrate_winner_prize_3/
               content = Alchemy::Content.find(content_id) rescue nil
-              content.essence.update_attributes(body: translation) if content && content.essence
+              content.essence.update_column(:body, translation) if content && content.essence
             else
               Rails.logger.error "NOT Updating essence: #{essence_key} (locale: #{locale}) - #{translations[locale][Alchemy::Translations::TRANSLATION_PREFIX]} - #{Alchemy::Translations::TRANSLATION_PREFIX}" if essence_key =~ /megacrate_winner_prize_3/
             end
           end
         end
+
+        Rails.logger.error "purging translation cache(#update_bodies)"
+        Alchemy.redis.del('all_translatable_essences')
       end
     end
   end
