@@ -48,7 +48,7 @@ module Alchemy #:nodoc:
           delegate :public?,     to: :element, allow_nil: true
 
           after_update :touch_content
-          after_save :purge_translation_cache
+          after_create :purge_translation_cache
           after_destroy :purge_translation_cache
 
           def acts_as_essence_class

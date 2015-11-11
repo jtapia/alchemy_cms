@@ -3,7 +3,7 @@ module Alchemy
     class EssenceBodyUpdater
 
       def update_bodies(translations)
-        Rails.logger.error "Updating essences with #{translations}"
+        Rails.logger.error "in update_bodies with #{translations}"
 
         locales = translations.keys
 
@@ -18,10 +18,13 @@ module Alchemy
           all_translated_content.each_key do |essence_key|
             content_id = all_translated_content[essence_key][locale]
 
-            Rails.logger.error "found content_id: #{content_id} for locale: #{locale}" if essence_key =~ /megacrate_winner_prize_3/
-
             # do we have an essence for this name/locale?
-            next unless content_id
+            if content_id
+              Rails.logger.error "found content_id: #{content_id} for locale: #{locale}" if essence_key =~ /megacrate_winner_prize_3/
+            else
+              Rails.logger.error "no content for locale: #{locale}" if essence_key =~ /megacrate_winner_prize_3/
+              next
+            end
 
             # do we have a translation for this alchemy essence?
             begin
@@ -39,9 +42,6 @@ module Alchemy
             end
           end
         end
-
-        Rails.logger.error "purging translation cache(#update_bodies)"
-        Alchemy.redis.del('all_translatable_essences')
       end
     end
   end
