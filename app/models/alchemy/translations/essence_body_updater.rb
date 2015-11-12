@@ -58,7 +58,8 @@ module Alchemy
                 # irb(main):099:0> element.essences.last.reload
                 #   => #<Alchemy::EssenceRichtext id: 771, body: "yyyy...
                 content.essence.element.contents(true)
-                content.essence.element.touch # kill the fragment caching
+                content.essence.element.touch    # kill the fragment caching
+                Rails.cache.clear                # come on man you are killing me..old shit take a hike man come on
               end
             else
               Rails.logger.error "NOT Updating essence: #{essence_key} (locale: #{locale}) - #{translations[locale][Alchemy::Translations::TRANSLATION_PREFIX]} - #{Alchemy::Translations::TRANSLATION_PREFIX}" if essence_key =~ /megacrate_winner_prize_3/
