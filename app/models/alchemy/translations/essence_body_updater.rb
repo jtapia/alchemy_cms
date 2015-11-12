@@ -43,7 +43,10 @@ module Alchemy
               end
               if content && content.essence
                 content.essence.update_column(:body, translation)
-                content.essence.send(:strip_content) if content.essence.kind_of? Alchemy::EssenceRichtext
+                if content.essence.kind_of? Alchemy::EssenceRichtext
+                  content.essence.send(:strip_content)
+                  content.essence.update_column(:stripped_body, content.essence.stripped_body)
+                end
 
                 # i hate having to do this, but:
                 # irb(main):097:0* element

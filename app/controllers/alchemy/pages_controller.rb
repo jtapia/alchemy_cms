@@ -200,7 +200,7 @@ module Alchemy
     #
     def render_fresh_page?
       !cache_page? || stale?(etag: page_etag,
-        last_modified: @page.published_at,
+        last_modified: @page.elements.order(:updated_at).last.updated_at,
         public: !@page.restricted)
     end
 
