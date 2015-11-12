@@ -41,7 +41,20 @@ module Alchemy
                 Rails.logger.error "PROBLEM finding content for content_id #{content_id} : #{essence_key} (locale: #{locale})"
                 nil
               end
-              content.essence.update_column(:body, translation) if content && content.essence
+              if content && content.essence
+                content.essence.update_column(:body, translation)
+
+                # i hate having to do this, but:
+                # irb(main):097:0* element
+                #    => #<Alchemy::Element id: 224, name: "hiw_megacrate_info"....
+                #
+                # irb(main):098:0> element.essences.last
+                #    => #<Alchemy::EssenceRichtext id: 771, body: "<p>Malachi is not ...
+                #
+                # irb(main):099:0> element.essences.last.reload
+                #   => #<Alchemy::EssenceRichtext id: 771, body: "yyyy...
+                content.essence.element.contents(true)
+              end
             else
               Rails.logger.error "NOT Updating essence: #{essence_key} (locale: #{locale}) - #{translations[locale][Alchemy::Translations::TRANSLATION_PREFIX]} - #{Alchemy::Translations::TRANSLATION_PREFIX}" if essence_key =~ /megacrate_winner_prize_3/
             end
