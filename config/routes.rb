@@ -73,6 +73,7 @@ Alchemy::Engine.routes.draw do
         get :configure
         get :preview
         get :info
+        get :schedule_publish_new
       end
     end
 

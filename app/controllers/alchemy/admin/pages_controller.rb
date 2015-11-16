@@ -39,6 +39,10 @@ module Alchemy
         render layout: !request.xhr?
       end
 
+      def schedule_publish
+        render layout: !request.xhr?
+      end
+
       def new
         @page = Page.new(layoutpage: params[:layoutpage] == 'true', parent_id: params[:parent_id])
         @page_layouts = PageLayout.layouts_for_select(Language.current.id, @page.layoutpage?)
