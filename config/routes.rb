@@ -70,6 +70,7 @@ Alchemy::Engine.routes.draw do
         post :publish
         post :fold
         post :visit
+        post :schedule_publish
         get :configure
         get :preview
         get :info

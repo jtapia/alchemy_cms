@@ -7,7 +7,7 @@ module Alchemy
         except: [:show]
 
       before_action :load_page,
-        only: [:show, :info, :unlock, :visit, :publish, :configure, :edit, :update, :destroy, :fold]
+        only: [:show, :info, :unlock, :visit, :publish, :configure, :edit, :update, :destroy, :fold, :schedule_publish_new, :schedule_publish]
 
       before_action :set_root_page,
         only: [:index, :show, :sort, :order]
@@ -39,8 +39,17 @@ module Alchemy
         render layout: !request.xhr?
       end
 
-      def schedule_publish
+      def schedule_publish_new
         render layout: !request.xhr?
+      end
+
+      def schedule_publish
+        year = params[:scheduled_publish]['time_to_publish(1i)'].to_i
+        month = params[:scheduled_publish]['time_to_publish(2i)'].to_i
+        day = params[:scheduled_publish]['time_to_publish(3i)'].to_i
+        hours = params[:scheduled_publish]['time_to_publish(4i)'].to_i
+        minutes = params[:scheduled_publish]['time_to_publish(5i)'].to_i
+        Workers::ScheduleCmsPagePublish.new.test_execution(@page.id, year, month, day, hours, minutes)
       end
 
       def new

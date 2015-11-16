@@ -1,4 +1,14 @@
 <div class="resource_info">
+  <%= check_box_tag(:date) %><br>
+  <br>
+  <br>
+  Time is in pacific time:
+  <%= form_tag(alchemy.schedule_publish_admin_page_path(@page)) do %>
+    <%= datetime_select('scheduled_publish', 'time_to_publish') %>
+    <br>
+    <%= submit_tag("Schedule Publish") %>
+    <br>
+  <% end %>
 This page will include a form to schedule the publish:
 
 
