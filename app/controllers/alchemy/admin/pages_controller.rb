@@ -49,7 +49,11 @@ module Alchemy
         day = params[:scheduled_publish]['time_to_publish(3i)'].to_i
         hours = params[:scheduled_publish]['time_to_publish(4i)'].to_i
         minutes = params[:scheduled_publish]['time_to_publish(5i)'].to_i
-        Workers::ScheduleCmsPagePublish.new.test_execution(@page.id, year, month, day, hours, minutes)
+        time_to_publish_pst = Time.zone.parse("#{year}-#{month}-#{day} #{hours}:#{minutes}")
+        time_to_publish_utc = time_to_publish_pst.getutc
+        Workers::ScheduleCmsPagePublish.perform_at(time_to_publish_utc, @page.id)
+        flash[:notice] = "#{@page.name} scheduled to publish at #{time_to_publish_pst}PT"
+        redirect_to admin_pages_path
       end
 
       def new
