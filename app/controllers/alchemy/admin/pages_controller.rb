@@ -66,6 +66,7 @@ module Alchemy
       def delete_scheduled_publish_time
         delete_current_scheduled_job(@page.job_id)
         @page.update_attributes(job_id: nil, scheduled_publish_time: nil) 
+        flash[:notice] = "Removed scheduled publish from: #{@page.name}" 
         redirect_to admin_pages_path
       end
 
