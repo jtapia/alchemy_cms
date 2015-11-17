@@ -153,7 +153,8 @@ module Alchemy
           :sort,
           :switch_language,
           :schedule_publish_new,
-          :schedule_publish
+          :schedule_publish,
+          :delete_scheduled_publish_time
         ], Alchemy::Page
         can :manage, Alchemy::Picture
         can :manage, Alchemy::Attachment

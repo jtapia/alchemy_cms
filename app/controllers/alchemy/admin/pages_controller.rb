@@ -7,7 +7,7 @@ module Alchemy
         except: [:show]
 
       before_action :load_page,
-        only: [:show, :info, :unlock, :visit, :publish, :configure, :edit, :update, :destroy, :fold, :schedule_publish_new, :schedule_publish]
+        only: [:show, :info, :unlock, :visit, :publish, :configure, :edit, :update, :destroy, :fold, :schedule_publish_new, :schedule_publish, :delete_scheduled_publish_time]
 
       before_action :set_root_page,
         only: [:index, :show, :sort, :order]
@@ -51,8 +51,21 @@ module Alchemy
         minutes = params[:scheduled_publish]['time_to_publish(5i)'].to_i
         time_to_publish_pst = Time.zone.parse("#{year}-#{month}-#{day} #{hours}:#{minutes}")
         time_to_publish_utc = time_to_publish_pst.getutc
-        Workers::ScheduleCmsPagePublish.perform_at(time_to_publish_utc, @page.id)
+        delete_current_scheduled_job(@page.job_id) if @page.job_id
+        jobid = ScheduleCmsPagePublish.perform_at(time_to_publish_utc, @page.id)
+        @page.update_attributes(job_id: jobid, scheduled_publish_time: time_to_publish_pst) 
         flash[:notice] = "#{@page.name} scheduled to publish at #{time_to_publish_pst}PT"
+        redirect_to admin_pages_path
+      end
+
+      def delete_current_scheduled_job(job_id)
+        job = Sidekiq::ScheduledSet.new.find_job(job_id)
+        job.delete
+      end
+
+      def delete_scheduled_publish_time
+        delete_current_scheduled_job(@page.job_id)
+        @page.update_attributes(job_id: nil, scheduled_publish_time: nil) 
         redirect_to admin_pages_path
       end
 
