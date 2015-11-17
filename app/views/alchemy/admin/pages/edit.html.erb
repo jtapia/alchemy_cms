@@ -96,27 +96,23 @@
     } %>
     <label><%= _t('Reload Preview') %></label>
   </div>
-
-
+  <div class="toolbar_spacer"></div>
   <div class="button_with_label">
     <%= link_to_dialog(
       render_icon('publish'),
       alchemy.schedule_publish_new_admin_page_path(@page),
       {
-        title: _t('schedule publish'),
+        title: _t('Schedule publish'),
         size: '520x320'
       },
       {
-        class: 'schedule_publish',
+        class: 'icon_button',
         title: _t('schedule publish'),
-        'data-alchemy-hotkey' => 'alt+i'
+        'data-alchemy-hotkey' => 'alt+s'
       }
     ) %>
     <label><%= _t('schedule publish') %></label>
   </div>
-
-
-
 </div>
 <div class="toolbar_buttons right">
   <div class="button_with_label" id="element_window_button">
