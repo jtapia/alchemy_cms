@@ -118,7 +118,7 @@ module Alchemy
         if links.present?
           links.unshift('Other translations:')
         end
-        links.join
+        links.join(' | ')
 
       end
 
