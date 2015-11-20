@@ -45,8 +45,8 @@ module Alchemy
 
       def schedule_publish
         delete_current_scheduled_job(@page.job_id) if @page.job_id
-        jobid = ScheduleCmsPagePublish.perform_at(time_to_publish_utc, @page.id)
-        @page.update_attributes(job_id: jobid, scheduled_publish_time: time_to_publish_pst) 
+        job_id = ScheduleCmsPagePublish.perform_at(time_to_publish_utc, @page.id)
+        @page.update_attributes(job_id: job_id, scheduled_publish_time: time_to_publish_pst) 
         flash[:notice] = "#{@page.name} scheduled to publish at #{time_to_publish_pst}PT"
         redirect_to admin_pages_path
       end
