@@ -19,7 +19,8 @@ module Alchemy
         if (description = content_description(element, essence_hash)).blank?
           raise ContentDefinitionError, "No description found in elements.yml for #{essence_hash.inspect} and #{element.inspect}"
         else
-          new(name: description['name'], element_id: element.id)
+          translate = description['translate'] == false ? false : true
+          new(name: description['name'], element_id: element.id, translate: translate)
         end
       end
 
