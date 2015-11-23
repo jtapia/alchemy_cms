@@ -5,7 +5,7 @@ module Alchemy
     TRANSLATION_PREFIX  = if Rails.env.production? 
       'cms'
     else
-      ENV['TRANSLATION_PREFIX'] || 'do_not_translate'
+      'do_not_translate'
     end
   end
 end
