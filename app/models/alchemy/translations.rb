@@ -1,8 +1,13 @@
 module Alchemy
   module Translations
-    # we want to prepend all translated data bound four our translation engine
+    # we want to prepend all translated data bound for our translation engine
     # with this prefix for orgainizational/namespace reasons
-    TRANSLATION_PREFIX = ENV['TRANSLATION_PREFIX']
-    #TRANSLATION_PREFIX = 'do_not_translate'
+    TRANSLATION_PREFIX  = if Rails.env.production? 
+      'cms'
+    else
+      ENV['TRANSLATION_PREFIX'] || 'do_not_translate'
+    end
   end
 end
+
+
