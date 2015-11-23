@@ -1,0 +1,15 @@
+<div class="resource_info">
+  Times are in pacific:
+  <br>
+  <% if @page.scheduled_publish_time %>
+    Publish currently scheduled for: <%= @page.scheduled_publish_time %>
+  <%= button_to "Remove scheduled publish time", alchemy.delete_scheduled_publish_time_admin_page_path(@page) %>
+  <% end %>
+  <br> 
+  <%= form_tag(alchemy.schedule_publish_admin_page_path(@page)) do %>
+    <%= datetime_select('scheduled_publish', 'time_to_publish') %>
+    <br>
+    <%= submit_tag("Schedule Publish") %>
+    <br>
+  <% end %>
+</div>

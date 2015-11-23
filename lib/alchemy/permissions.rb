@@ -107,6 +107,7 @@ module Alchemy
         can :index,                 :alchemy_admin_latest_translations
 
         can :edit,                  :alchemy_admin_layoutpages
+        can :index,                 :alchemy_admin_schedule_publish
 
         # Resources
         can [:read, :download],     Alchemy::Attachment
@@ -150,7 +151,10 @@ module Alchemy
           :order,
           :publish,
           :sort,
-          :switch_language
+          :switch_language,
+          :schedule_publish_new,
+          :schedule_publish,
+          :delete_scheduled_publish_time
         ], Alchemy::Page
         can :manage, Alchemy::Picture
         can :manage, Alchemy::Attachment

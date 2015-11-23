@@ -7,7 +7,7 @@ module Alchemy
         except: [:show]
 
       before_action :load_page,
-        only: [:show, :info, :unlock, :visit, :publish, :configure, :edit, :update, :destroy, :fold]
+        only: [:show, :info, :unlock, :visit, :publish, :configure, :edit, :update, :destroy, :fold, :schedule_publish_new, :schedule_publish, :delete_scheduled_publish_time]
 
       before_action :set_root_page,
         only: [:index, :show, :sort, :order]
@@ -37,6 +37,43 @@ module Alchemy
 
       def info
         render layout: !request.xhr?
+      end
+
+      def schedule_publish_new
+        render layout: !request.xhr?
+      end
+
+      def schedule_publish
+        delete_current_scheduled_job(@page.job_id) if @page.job_id
+        job_id = ScheduleCmsPagePublish.perform_at(time_to_publish_utc, @page.id)
+        @page.update_attributes(job_id: job_id, scheduled_publish_time: time_to_publish_pst) 
+        flash[:notice] = "#{@page.name} scheduled to publish at #{time_to_publish_pst}PT"
+        redirect_to admin_pages_path
+      end
+
+      def time_to_publish_pst
+        year = params[:scheduled_publish]['time_to_publish(1i)'].to_i
+        month = params[:scheduled_publish]['time_to_publish(2i)'].to_i
+        day = params[:scheduled_publish]['time_to_publish(3i)'].to_i
+        hours = params[:scheduled_publish]['time_to_publish(4i)'].to_i
+        minutes = params[:scheduled_publish]['time_to_publish(5i)'].to_i
+        @time_to_publish_pst ||= Time.zone.parse("#{year}-#{month}-#{day} #{hours}:#{minutes}")
+      end
+
+      def time_to_publish_utc
+        @time_to_publish_utc ||= time_to_publish_pst.getutc
+      end
+
+      def delete_current_scheduled_job(job_id)
+        job = Sidekiq::ScheduledSet.new.find_job(job_id)
+        job.delete
+      end
+
+      def delete_scheduled_publish_time
+        delete_current_scheduled_job(@page.job_id)
+        @page.update_attributes(job_id: nil, scheduled_publish_time: nil) 
+        flash[:notice] = "Removed scheduled publish from: #{@page.name}" 
+        redirect_to admin_pages_path
       end
 
       def new
