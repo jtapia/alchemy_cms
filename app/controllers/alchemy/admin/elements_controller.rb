@@ -121,6 +121,7 @@ module Alchemy
 
         element.essences.each do |essence|
           next unless [Alchemy::EssenceText,Alchemy::EssenceRichtext,Alchemy::EssenceHtml].include? essence.class
+          next unless essence.content.translate
           position = essence.element.position
           key = "#{essence.content.name}_pos_#{position}"
 
