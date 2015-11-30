@@ -72,12 +72,14 @@ module Alchemy
       # And update all contents in the elements by calling update_contents.
       #
       def update
+        # binding.pry
         if @element.update_contents(contents_params)
           @page = @element.page
           @element_validated = @element.update_attributes!(element_params)
 
           Rails.logger.error "[ALCHEMY_LOCALE] updating contents for element in elements_controller#update: #{@element}"
           update_translations(@element) if @element.page.language.language_code == 'en'
+          update_skip_translate(params)
         else
           @element_validated = false
           @notice = _t('Validation failed')
@@ -138,6 +140,12 @@ module Alchemy
         Alchemy::TranslationSentEmail.new.perform(Localeapp.missing_translations.to_send.to_json)
       end
 
+      def update_skip_translate(params)
+        content_id = params[:contents].keys[0]
+        content = Alchemy::Content.find content_id
+        content.update(skip_translate: params[:skip_translate])
+      end
+
       def load_element
         @element = Element.find(params[:id])
       end
@@ -187,7 +195,8 @@ module Alchemy
       end
 
       def contents_params
-        params.fetch(:contents, {}).permit!
+        cp = params.fetch(:contents, {}).permit!
+        cp.merge(skip_translate: params[:skip_translate])
       end
 
       def element_params

@@ -50,7 +50,7 @@ module Alchemy
       private
 
       def content_params
-        params.require(:content).permit(:element_id, :name, :ingredient, :essence_type)
+        params.require(:content).permit(:element_id, :name, :ingredient, :essence_type, :skip_translate)
       end
 
       def picture_gallery_editor?

@@ -15,5 +15,7 @@
       <%= render 'alchemy/essences/shared/linkable_essence_tools', content: content %>
     <% end %>
     <%= render 'alchemy/essences/shared/locale_links', content: content %>
+    <br>
+    Translate essence: <%= radio_button_tag(:skip_translate, "true", content.skip_translate == true) %> <%= label_tag('true', "Off") %> | <%= radio_button_tag(:skip_translate, "false", content.skip_translate == false) %> <%= label_tag('false', "On") %>
   </div>
 <% end %>
