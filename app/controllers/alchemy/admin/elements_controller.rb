@@ -195,8 +195,7 @@ module Alchemy
       end
 
       def contents_params
-        cp = params.fetch(:contents, {}).permit!
-        cp.merge(skip_translate: params[:skip_translate])
+       params.fetch(:contents, {}).permit!
       end
 
       def element_params
