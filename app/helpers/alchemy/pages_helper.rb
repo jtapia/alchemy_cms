@@ -379,6 +379,75 @@ module Alchemy
       return meta_string.html_safe
     end
 
+    def render_open_graph_meta_data
+      build_open_graph_data
+      open_graph_meta_string = %(
+        #{og_meta_tag('image', open_graph_image_data)}
+        #{og_meta_tag('title', open_graph_title_data)}
+        #{og_meta_tag('description', open_graph_description_data)}
+        #{og_meta_tag('url', open_graph_url_data)}
+        #{og_meta_tag('site_name', open_graph_site_name_data)}
+        #{og_meta_tag('type', open_graph_type_data)}
+      )
+      return open_graph_meta_string.html_safe
+    end
+
+   def og_meta_tag(type, content)
+     <meta property="og:#{type}" content="#{content}">
+   end
+
+   def open_graph_image_data
+
+      @image       ||= image_url 'opengraph-image.jpg' 
+      @image       = image_url @page.open_graph_image unless @page.open_graph_image.blank? 
+   end
+
+   def open_graph_title_data
+     
+   end
+
+   def open_graph_description_data
+
+   end
+
+   def open_graph_url_data
+
+   end
+
+   def open_graph_site_name_data
+
+   end
+
+   def open_graph_type_data
+
+   end
+
+    def open_graph_data_defaults
+      @title       ||= 'Loot Crate - Monthly Geek and Gamer Subscription Box.'
+      @description ||= 'Loot Crate is an epic monthly subscription box for geeks and gamers for under $20.'
+      @url         ||= request.original_url
+      @site_name   ||= 'Loot Crate'
+      @type        ||= 'website'
+    end
+
+    def build_open_graph_data
+      open_graph_data_defaults
+      @title       = @page.open_graph_title unless @page.open_graph_title.blank?  
+      @description = @page.open_graph_description unless @page.open_graph_description.blank? 
+      @url         = @page.open_graph_url unless @page.open_graph_url.blank?
+      @site_name   = @page.open_graph_site_name unless @page.open_graph_site_name.blank?
+      @type        = @page.open_graph_type unless @page.open_graph_type.blank?
+
+      {
+        image: @image,
+        title: @title,
+        description: @description,
+        url: @url,
+        site_name: @site_name,
+        type: @type
+      }
+    end
+
     # Renders the partial for the cell with the given name of the current page.
     # Cell partials are located in +app/views/cells/+ of your project.
     #
