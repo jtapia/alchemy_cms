@@ -54,26 +54,23 @@
     hint: _t('pages.update.comma_seperated') %>
   Open Graph Meta Data:
   <%= f.input :open_graph_image,
-    as: 'text' %>
+    as: 'text', 
+    hint: 'Leave blank for: opengraph-image.jpg' %>
   <%= f.input :open_graph_title,
-    as: 'text' %>
+    as: 'text',
+    hint: 'Leave blank for: Loot Crate - Monthly Geek and Gamer Subscription Box.' %>
   <%= f.input :open_graph_description,
-    as: 'text' %>
+    as: 'text',
+    hint: 'Leave blank for: Loot Crate is an epic monthly subscription box for geeks and gamers for under $20.' %>
   <%= f.input :open_graph_url,
-    as: 'text' %>
+    as: 'text',
+    hint: 'Leave blank for: request.original_url' %>
   <%= f.input :open_graph_site_name,
-    as: 'text' %>
+    as: 'text',
+    hint: 'Leave blank for: Loot Crate' %>
   <%= f.input :open_graph_type,
-    as: 'text' %>
-
-
-
-
-
-
-
-
-
+    as: 'text',
+    hint: 'Leave blank for: website' %>
   <% if @page.taggable? %>
     <div class="input string">
       <%= f.label :tag_list %>
