@@ -8,17 +8,17 @@ module Alchemy
 
     def open_graph_data
       open_graph_meta_string = %(
-      #{og_meta_tag_for('image', open_graph_image_data)}
-      #{og_meta_tag_for('title', open_graph_title_data)}
-      #{og_meta_tag_for('description', open_graph_description_data)}
-      #{og_meta_tag_for('url', open_graph_url_data)}
-      #{og_meta_tag_for('site_name', open_graph_site_name_data)}
-      #{og_meta_tag_for('type', open_graph_type_data)}
+      #{open_graph_meta_tag_for('image', open_graph_image_data)}
+      #{open_graph_meta_tag_for('title', open_graph_title_data)}
+      #{open_graph_meta_tag_for('description', open_graph_description_data)}
+      #{open_graph_meta_tag_for('url', open_graph_url_data)}
+      #{open_graph_meta_tag_for('site_name', open_graph_site_name_data)}
+      #{open_graph_meta_tag_for('type', open_graph_type_data)}
       )
       return open_graph_meta_string.html_safe
     end
 
-    def og_meta_tag_for(type, content)
+    def open_graph_meta_tag_for(type, content)
       %(<meta property="og:#{type}" content="#{content}">)
     end
 
