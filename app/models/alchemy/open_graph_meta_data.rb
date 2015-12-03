@@ -24,8 +24,8 @@ module Alchemy
 
     def open_graph_image_data
       base_url = @request.base_url
-      image = "#{base_url}#{ActionController::Base.helpers.image_path 'opengraph-image.jpg'}"
-      image = "#{base_url}#{ActionController::Base.helpers.image_path @page.open_graph_image}" unless @page.open_graph_image.blank?
+      image = "#{ActionController::Base.helpers.image_path 'opengraph-image.jpg'}"
+      image = "#{ActionController::Base.helpers.image_path @page.open_graph_image}" unless @page.open_graph_image.blank?
       return image
     end
 
