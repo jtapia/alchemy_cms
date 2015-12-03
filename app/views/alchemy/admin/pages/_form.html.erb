@@ -64,7 +64,7 @@
     hint: 'Leave blank for: Loot Crate is an epic monthly subscription box for geeks and gamers for under $20.' %>
   <%= f.input :open_graph_url,
     as: 'text',
-    hint: 'Leave blank for: request.original_url' %>
+    hint: "Leave blank for: #{request.base_url}/#{@page.urlname}" %>
   <%= f.input :open_graph_site_name,
     as: 'text',
     hint: 'Leave blank for: Loot Crate' %>
