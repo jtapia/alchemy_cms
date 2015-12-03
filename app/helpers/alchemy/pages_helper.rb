@@ -380,56 +380,8 @@ module Alchemy
     end
 
     def render_open_graph_meta_data
-       open_graph_meta_string = %(
-         #{og_meta_tag_for('image', open_graph_image_data_for(@page))}
-         #{og_meta_tag_for('title', open_graph_title_data_for(@page))}
-         #{og_meta_tag_for('description', open_graph_description_data_for(@page))}
-         #{og_meta_tag_for('url', open_graph_url_data_for(@page))}
-         #{og_meta_tag_for('site_name', open_graph_site_name_data_for(@page))}
-         #{og_meta_tag_for('type', open_graph_type_data_for(@page))}
-       )
-       return open_graph_meta_string.html_safe
+      Alchemy::OpenGraphMetaData.new(@page, request).open_graph_data
     end
-
-   def og_meta_tag_for(type, content)
-     %(<meta property="og:#{type}" content="#{content}">)
-   end
-
-   def open_graph_image_data_for(page)
-      image = image_url 'opengraph-image.jpg' 
-      image = image_url page.open_graph_image unless page.open_graph_image.blank?
-      return image
-   end
-
-   def open_graph_title_data_for(page)
-      title = 'Loot Crate - Monthly Geek and Gamer Subscription Box.'
-      title = page.open_graph_title unless page.open_graph_title.blank?  
-      return title
-   end
-
-   def open_graph_description_data_for(page)
-      description = 'Loot Crate is an epic monthly subscription box for geeks and gamers for under $20.'
-      description = page.open_graph_description unless page.open_graph_description.blank? 
-      return description
-   end
-
-   def open_graph_url_data_for(page)
-      url = request.original_url
-      url = page.open_graph_url unless page.open_graph_url.blank?
-      return url
-   end
-
-   def open_graph_site_name_data_for(page)
-      site_name = 'Loot Crate'
-      site_name = page.open_graph_site_name unless page.open_graph_site_name.blank?
-      return site_name
-   end
-
-   def open_graph_type_data_for(page)
-      type = 'website'
-      type = page.open_graph_type unless page.open_graph_type.blank?
-      return type
-   end
 
     # Renders the partial for the cell with the given name of the current page.
     # Cell partials are located in +app/views/cells/+ of your project.
