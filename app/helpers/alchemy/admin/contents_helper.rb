@@ -115,10 +115,7 @@ module Alchemy
             end
           end
         end
-        if links.present?
-          link_string = links.join(' | ')
-        end
-        'Other translations: ' + link_string
+        links.present? ? "Other translations: #{links.join(' | ')}" : ""
       end
 
       # Renders a link for removing that content
