@@ -1,5 +1,5 @@
-Translate essence:
+Translate?:
 <%= radio_button_tag("skip_translate[#{content.id}]", "true", content.skip_translate == true) %> 
-<%= label_tag('true', "Off", class: 'inline') %> 
+<%= label_tag('true', "No", class: 'inline') %> 
 <%= radio_button_tag("skip_translate[#{content.id}]", "false", content.skip_translate == false || content.skip_translate.nil?) %> 
-<%= label_tag('false', "On", class: 'inline') %>
+<%= label_tag('false', "Yes", class: 'inline') %>
