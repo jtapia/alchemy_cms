@@ -78,7 +78,7 @@ module Alchemy
 
           Rails.logger.error "[ALCHEMY_LOCALE] updating contents for element in elements_controller#update: #{@element}"
           update_translations(@element) if @element.page.language.language_code == 'en'
-          update_skip_translate(params[:skip_translate])
+          update_skip_translate(params[:skip_translate]) unless params[:skip_translate].nil?
         else
           @element_validated = false
           @notice = _t('Validation failed')
