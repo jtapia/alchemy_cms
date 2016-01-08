@@ -321,8 +321,10 @@ module Alchemy
     end
 
     def copy_children_to(new_parent)
+      skip_pages = Alchemy::SkipCopyPage.pluck(:page_id)
       self.children.each do |child|
         next if child == new_parent
+        next if skip_pages.include?(child.id)
         new_child = Page.copy(child, {
           :language_id => new_parent.language_id,
           :language_code => new_parent.language_code
